@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  avaliaai:
+    image: avaliaai:latest
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=https://avaliaai.crescentiagroup.com.br
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    networks:
+      - Crescentia
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.avaliaai.rule=Host(`avaliaai.crescentiagroup.com.br`)"
+        - "traefik.http.routers.avaliaai.entrypoints=websecure"
+        - "traefik.http.routers.avaliaai.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.avaliaai.loadbalancer.server.port=3000"
+
+networks:
+  Crescentia:
+    external: true
