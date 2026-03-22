@@ -1,15 +1,11 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { getCriteriaPerformance } from '@/lib/queries'
 import { FilterParams } from '@/types/dashboard'
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const s = req.nextUrl.searchParams
     const params: FilterParams = {
       period: s.get('period') ?? '30d',

@@ -1,8 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { X, SkipForward, TrendingUp, Search } from 'lucide-react'
 import { Header } from '@/components/layout/Header'
 import { FiltersSidebar } from '@/components/dashboard/FiltersSidebar'
@@ -107,9 +105,6 @@ function ActiveFiltersBanner({ badges, onClearAll }: { badges: FilterBadge[]; on
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
-  const { status } = useSession()
-  const router = useRouter()
-
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [filters, setFilters] = useState<ActiveFilters>(DEFAULT_FILTERS)
   const [activeWarningTipo, setActiveWarningTipo] = useState<string | null>(null)
@@ -143,10 +138,6 @@ export default function DashboardPage() {
   const debounceRef = useRef<NodeJS.Timeout>()
   const [debouncedFilters, setDebouncedFilters] = useState<ActiveFilters>(DEFAULT_FILTERS)
   const tableRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (status === 'unauthenticated') router.push('/login')
-  }, [status, router])
 
   useEffect(() => {
     clearTimeout(debounceRef.current)

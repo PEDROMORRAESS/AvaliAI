@@ -1,8 +1,6 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { getEvaluationById } from '@/lib/queries'
 
 export async function GET(
@@ -10,8 +8,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const { id } = params
     if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 })
