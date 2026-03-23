@@ -64,6 +64,7 @@ ENVEOF
 
 echo '==> Fazendo deploy via Docker Stack...'
 cd /root/avaliaai
+set -a && source /root/avaliaai/.env && set +a
 docker stack deploy -c docker-compose.yml avaliaai
 
 echo '==> Limpando arquivo temporario...'
