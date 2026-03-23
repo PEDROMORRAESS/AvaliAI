@@ -1,7 +1,6 @@
 'use client'
 
-import { signOut, useSession } from 'next-auth/react'
-import { LogOut, PanelLeftClose, PanelLeft } from 'lucide-react'
+import { PanelLeftClose, PanelLeft } from 'lucide-react'
 
 interface HeaderProps {
   sidebarOpen: boolean
@@ -9,8 +8,6 @@ interface HeaderProps {
 }
 
 export function Header({ sidebarOpen, onToggleSidebar }: HeaderProps) {
-  const { data: session } = useSession()
-
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm h-14 flex items-center px-4 gap-3">
       <button
@@ -27,19 +24,6 @@ export function Header({ sidebarOpen, onToggleSidebar }: HeaderProps) {
           <p className="text-xs text-gray-400 leading-none">Fazendão Materiais de Construção</p>
           <h1 className="text-sm font-bold text-gray-900">AvaliaAI</h1>
         </div>
-      </div>
-
-      <div className="ml-auto flex items-center gap-3">
-        <span className="hidden md:block text-xs text-gray-400 truncate max-w-[180px]">
-          {session?.user?.email}
-        </span>
-        <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-red-50"
-        >
-          <LogOut size={14} />
-          <span className="hidden sm:inline">Sair</span>
-        </button>
       </div>
     </header>
   )
