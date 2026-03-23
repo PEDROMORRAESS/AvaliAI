@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { X, SkipForward, TrendingUp, Search } from 'lucide-react'
 import { Header } from '@/components/layout/Header'
@@ -259,7 +261,6 @@ export default function DashboardPage() {
   // ─── Fetch functions ────────────────────────────────────────────────────────
 
   const fetchMain = useCallback(async () => {
-    if (status !== 'authenticated') return
     setLoadingSummary(true)
     setLoadingCharts(true)
     const qs = buildQS(debouncedFilters)
@@ -284,10 +285,9 @@ export default function DashboardPage() {
       setLoadingSummary(false)
       setLoadingCharts(false)
     }
-  }, [debouncedFilters, status])
+  }, [debouncedFilters])
 
   const fetchScatter = useCallback(async () => {
-    if (status !== 'authenticated') return
     setLoadingScatter(true)
     try {
       const res = await fetch(`/api/dashboard/scatter?${buildQS(debouncedFilters)}`)
@@ -297,20 +297,18 @@ export default function DashboardPage() {
     } finally {
       setLoadingScatter(false)
     }
-  }, [debouncedFilters, status])
+  }, [debouncedFilters])
 
   const fetchExclusion = useCallback(async () => {
-    if (status !== 'authenticated') return
     try {
       const res = await fetch(`/api/dashboard/exclusion-reasons?${buildQS(debouncedFilters)}`)
       if (res.ok) setExclusionReasons(await res.json())
     } catch (e) {
       console.error('[Dashboard] fetchExclusion:', e)
     }
-  }, [debouncedFilters, status])
+  }, [debouncedFilters])
 
   const fetchTable = useCallback(async () => {
-    if (status !== 'authenticated') return
     setLoadingTable(true)
     const qs = buildQS(debouncedFilters, {
       page: String(tablePage),
@@ -326,7 +324,7 @@ export default function DashboardPage() {
     } finally {
       setLoadingTable(false)
     }
-  }, [debouncedFilters, tablePage, tableSortBy, tableSortOrder, status])
+  }, [debouncedFilters, tablePage, tableSortBy, tableSortOrder])
 
   useEffect(() => { fetchMain() }, [fetchMain])
   useEffect(() => { fetchScatter() }, [fetchScatter])
@@ -355,14 +353,6 @@ export default function DashboardPage() {
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
-
-  if (status === 'loading' || status === 'unauthenticated') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
